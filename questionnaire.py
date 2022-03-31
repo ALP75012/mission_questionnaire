@@ -168,7 +168,7 @@ titre = f_reading_dico["titre"]
 # à ce moment-là "f_reading_dico" est un dictionnaire dans lequel on a toutes les questions
 # on créé un class "Question_2" équivalent à question pour effectuer le même comportement
 
-# BONNE REPONSES : 2 2 2 1 1 3 3 2 1 3
+# BONNE REPONSES : 2 2 2 1 1 3 3 2 1 3 (rajouter + 1)
 Question_list = []
 # print(questions)
 # print(len(questions))
@@ -176,23 +176,7 @@ for i in range(0, 4):  # le nombre de question est : "len(questions)"
     # pour chacune des questions on veut définir quelle est la bonne réponse
     Bonne_rep = None  # on initialise ce paramètre pour chacune des questions
     print(Bonne_rep)
-    print("i : " + str(i))
-    print("les choix de reponse pour la question i sont : " + str(
-        questions[i]['choix']))  # correspond à la liste des "[]" qui représente les choix et un booléean
-    for j in range(0, len(questions[i]['choix'])):
-        #  print("j :" + str(j))
-        # print(questions[i]['choix'][j][1])
-        if questions[i]['choix'][j][1]:  # si on rencontre le "True" on retient le numéro dans les différentes réponses
-            print("la place du True dans les réponse est : " + str(j))
-            Bonne_rep = questions[i]['choix'][j][0]
-            print("la bonne réponse associée est : " + Bonne_rep)
-
-    # on contruit la question, maintenant que l'on a la bonne réponse
-    Question_i = Question(questions[i]['titre'], (
-        questions[i]['choix'][0][0],
-        questions[i]['choix'][1][0],
-        questions[i]['choix'][2][0],
-        questions[i]['choix'][3][0]), Bonne_rep)
+), Bonne_rep)
     Question_list.append(Question_i)  # il ne faut pas oublier de passer par un paramètre "question_i" qui correspond à
     # une question donné. Le paramètre "question" correspond lui à une classe
 
