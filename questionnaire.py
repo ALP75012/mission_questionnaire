@@ -1,8 +1,4 @@
-import requests
 import json
-import unicodedata
-# CES IMPORTS au-dessus sont du au copier / coller du fichier "import.py"
-
 
 # PROJET QUESTIONNAIRE V3 : POO
 #
@@ -142,15 +138,16 @@ lancer_questionnaire(questionnaire)"""
 # lancer le questionnaire n'a pour but que de lancer toutes les questions les unes à la suite des autres
 
 
-# NOUVEAU TRAVAIL
-# les fichiers "json" que l'on récupère sont au format texte
+# NOUVEAU TRAVAIL / les fichiers "json" que l'on récupère sont au format texte
 f = open("cinema_starwars_confirme.json", "r")  # on ouvre le fichier json avec toutes les questions et réponse
 f_reading = f.read()  # on créé un fichier de lecture
 f_reading_dico = json.loads(f_reading)  # on désérialise : "texte -> dico". C'est un dictionnaire dans lequel on a
-# toutes les questions
+# toutes les questions (on aura pu le faire après le "close" si on le souhaitais)
 #   print(f_reading_dico)
 f.close()  # on a tout copier dans le dico "f_reading_dico" on peut fermer le fichier texte
 
+
+# on récupère les données du dico 
 questions = f_reading_dico["questions"]  # toutes les questions du dictionnaire
 categorie = f_reading_dico["categorie"]  # la catégorie du quizz
 titre = f_reading_dico["titre"]  # la titre du quizz
