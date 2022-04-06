@@ -33,10 +33,43 @@ class Question:
         self.choix = choix
         self.bonne_reponse = bonne_reponse
 
-    def FromData(data):
-        # ....
-        q = Question(data[2], data[0], data[1])
+    def FromJsonData(data):  # ici on obligé de faire du code pour aller chercher les réponse
+        # QUESTIONS
+        ques = data["titre"]
+        # print(ques)
+
+        # CHOIX
+        choix = [i[0] for i in data["choix"]]  # on fait une complétion de liste
+        # print(choix)
+        # print(len(choix))
+
+        # BONNE REPONSE
+        # pour comprendre
+        #   print(data["choix"])
+        #   print(data["choix"][1])
+        #   print(data["choix"][1][1])
+
+        # PARTIE QUI PEUT ETRE REMPLACE PAR UNE COMPLETION
+        # bonne_rep = None
+        #for i in range(0, 4):
+          #  print(i)
+           # print(data["choix"][i][1])
+            #print(data["choix"][i][0])
+        #    if data["choix"][i][1]:
+             #   print("VRAI")
+         #       bonne_rep = data["choix"][i][0]
+              #  print(bonne_rep)
+        # print(bonne_rep)
+
+        bonne_reponse = [i[0] for i in data["choix"] if i[1]]
+        #   print(bonne_reponse[0])
+        if len(bonne_reponse) != 1:
+            return None  # si la longueur de la bonne réponse est différent de 1 c'est qu'on a un pb
+
+        # CONSTRUCTION DE LA QUESTION : avec "ques", "choix", "bonne_reponse"
+        q = Question(ques, choix, bonne_reponse[0])  # on utilise la syntaxe d'avant que l'on retravaillé
         return q
+
 
     def poser(self):  # cette fonction est appelé à chaque nouvelle question
         # print("QUESTION")
@@ -147,10 +180,14 @@ f_reading_dico = json.loads(f_reading)  # on désérialise : "texte -> dico". C'
 f.close()  # on a tout copier dans le dico "f_reading_dico" on peut fermer le fichier texte
 
 
-# on récupère les données du dico 
+# on récupère les données du dico
 questions = f_reading_dico["questions"]  # toutes les questions du dictionnaire
-categorie = f_reading_dico["categorie"]  # la catégorie du quizz
-titre = f_reading_dico["titre"]  # la titre du quizz
+#categorie = f_reading_dico["categorie"]  # la catégorie du quizz
+#titre = f_reading_dico["titre"]  # la titre du quizz
+q = Question.FromJsonData(questions[0])  # on appelle la fonction "FromJsonData" de la classe "Question" (rq : on aurait
+# pu choisir de changer l'init de "Question", mais on a préféré changer le pattern entier)
+q.poser()
+
 #   print(questions)
 #   print(categorie)
 #   print(titre)
@@ -160,7 +197,7 @@ titre = f_reading_dico["titre"]  # la titre du quizz
 #   print(questions[5]['choix'][0][0])  # Choix 1 de la question 6
 #   print(questions[5]['choix'][2][0])  # Choix 3 de la question 6
 
-Question_list = []
+"""Question_list = []
 #   print(questions)
 #   print(len(questions))
 for i in range(0, len(questions)):  # le nombre de question est : "len(questions)"
@@ -194,7 +231,7 @@ for i in range(0, len(questions)):  # le nombre de question est : "len(questions
 Questionnaire(  # on peut lui ajouter un tuple ou une liste indiférement. On lui donne la liste des questions définie
     # plus haut grâce à une boucle "for"
     Question_list
-).lancer()
+).lancer()"""
 
 
 # ETAPE 1 : essayer de faire venir le fichier du code "import.py". En effet, il faut que je réussisse à faire le lien
