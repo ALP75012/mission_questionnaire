@@ -1,8 +1,6 @@
 import requests
 import json
 import unicodedata
-
-
 # CES IMPORTS au-dessus sont du au copier / coller du fichier "import.py"
 
 
@@ -145,58 +143,66 @@ lancer_questionnaire(questionnaire)"""
 
 
 # NOUVEAU TRAVAIL
-
-f = open("mon_fichier_txt_avec_question", "r")  # on ouvre le fichier texte avec toutes les questions et réponse
+# les fichiers "json" que l'on récupère sont au format texte
+f = open("cinema_starwars_confirme.json", "r")  # on ouvre le fichier json avec toutes les questions et réponse
 f_reading = f.read()  # on créé un fichier de lecture
-f_reading_dico = json.loads(f_reading)  # on désérialise : "texte -> dico"
-print(f_reading_dico)
+f_reading_dico = json.loads(f_reading)  # on désérialise : "texte -> dico". C'est un dictionnaire dans lequel on a
+# toutes les questions
+#   print(f_reading_dico)
 f.close()  # on a tout copier dans le dico "f_reading_dico" on peut fermer le fichier texte
 
-questions = f_reading_dico["questions"]  # toutes les questions
-categorie = f_reading_dico["categorie"]
-titre = f_reading_dico["titre"]
+questions = f_reading_dico["questions"]  # toutes les questions du dictionnaire
+categorie = f_reading_dico["categorie"]  # la catégorie du quizz
+titre = f_reading_dico["titre"]  # la titre du quizz
+#   print(questions)
+#   print(categorie)
+#   print(titre)
 
-# on a juste à remplacer le "1" par un "2" pour avoir la 3éme personne au lieu de la 2éme
-# print(questions[1]['titre'])  # question 2
-# print(questions[1]['choix'])  # tous les choix choix de la question 2
-# print(questions[1]['choix'][0][0])  # Choix 1
-# print(questions[1]['choix'][1][0])  # Choix 2
-# print(questions[1]['choix'][2][0])  # Choix 3
-# print(questions[1]['choix'][3][0])  # Choix 4
-# print(questions[1]['choix'][2][0])  # bonne réponse
+#   print(questions[1]['titre'])  # question 2
+#   print(questions[3]['choix'])  # tous les choix choix de la question 4
+#   print(questions[5]['choix'][0][0])  # Choix 1 de la question 6
+#   print(questions[5]['choix'][2][0])  # Choix 3 de la question 6
 
-# à ce moment-là "f_reading_dico" est un dictionnaire dans lequel on a toutes les questions
-# on créé un class "Question_2" équivalent à question pour effectuer le même comportement
-
-# BONNE REPONSES : 2 2 2 1 1 3 3 2 1 3
 Question_list = []
-# print(questions)
-# print(len(questions))
-for i in range(0, 4):  # le nombre de question est : "len(questions)"
+#   print(questions)
+#   print(len(questions))
+for i in range(0, len(questions)):  # le nombre de question est : "len(questions)"
     # pour chacune des questions on veut définir quelle est la bonne réponse
     Bonne_rep = None  # on initialise ce paramètre pour chacune des questions
     print(Bonne_rep)
     print("i : " + str(i))
-    print("les choix de reponse pour la question i sont : " + str(
-        questions[i]['choix']))  # correspond à la liste des "[]" qui représente les choix et un booléean
+    print("les choix de reponse pour la question " + str(i+1) + " sont : " + str(questions[i]['choix']))  # correspond
+    # à la liste des "[]" qui représente les choix et un booléean
     for j in range(0, len(questions[i]['choix'])):
-        #  print("j :" + str(j))
-        # print(questions[i]['choix'][j][1])
+        #   print("j :" + str(j))
+        #   print(questions[i]['choix'][j][1])
         if questions[i]['choix'][j][1]:  # si on rencontre le "True" on retient le numéro dans les différentes réponses
-            print("la place du True dans les réponse est : " + str(j))
+            print("la place du True dans les réponse est : " + str(j+1))
             Bonne_rep = questions[i]['choix'][j][0]
             print("la bonne réponse associée est : " + Bonne_rep)
 
     # on contruit la question, maintenant que l'on a la bonne réponse
+    #   print("Construction de la question avec la bonne réponse")
     Question_i = Question(questions[i]['titre'], (
         questions[i]['choix'][0][0],
         questions[i]['choix'][1][0],
         questions[i]['choix'][2][0],
         questions[i]['choix'][3][0]), Bonne_rep)
+    #   print(Question_i)
     Question_list.append(Question_i)  # il ne faut pas oublier de passer par un paramètre "question_i" qui correspond à
-    # une question donné. Le paramètre "question" correspond lui à une classe
+    # une question donné. Le paramètre "question" correspond lui à une classe. A chaque fin de boucle "i" on ajoute
+    # la question à la liste des questions
+    print(Question_list)
 
 Questionnaire(  # on peut lui ajouter un tuple ou une liste indiférement. On lui donne la liste des questions définie
     # plus haut grâce à une boucle "for"
     Question_list
 ).lancer()
+
+
+# ETAPE 1 : essayer de faire venir le fichier du code "import.py". En effet, il faut que je réussisse à faire le lien
+# avec le fichier "import.py"
+# En fait on va devoir charger les fichiers ".json" que l'on créer grâce à notre script d'import. Et c'est ces fichiers
+# que l'on va utiliser dans le "questionnaire.py" afin de poser les questions
+
+# PROBLEME RENCONTRE :

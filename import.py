@@ -94,10 +94,16 @@ def generate_json_file(categorie, titre, url):  # cette fonction permet de prend
                 file.write(out_json)
                 file.close()
 
+
                 # là j'ai décidé d'écrire mes données sur un fichier texte pour voir ce que cela donne réellement
+
                 # file = open("mon_fichier_txt_avec_question", "w")
                 # file.write(out_json)
                 # file.close()
+
+                # utiliser un fichier "txt" pour comprendre comment le code pouvait fonctionner n'est pas une mauvaise
+                # idée, mais il faut comprendre que le lien entre les deux fichiers se fait par les fichiers "json"
+                # (qui sont en fait des fichiers textes) importé grâce à ce script Python
 
                 #   print("end")
                 #   print(out_questions_data)
