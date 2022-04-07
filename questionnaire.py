@@ -33,10 +33,10 @@ class Question:
         self.choix = choix
         self.bonne_reponse = bonne_reponse
 
-    def FromJsonData(data):  # ici on obligé de faire du code pour aller chercher les réponse
+    def from_json_data(data):  # ici on obligé de faire du code pour aller chercher les réponse
         # QUESTIONS
         ques = data["titre"]
-        # print(ques)
+        #  print(ques)
 
         # CHOIX
         choix = [i[0] for i in data["choix"]]  # on fait une complétion de liste
@@ -104,99 +104,82 @@ class Question:
 
 class Questionnaire:
     numero_question = 0
-
-    def __init__(self, questions):
+    
+    def __init__(self, questions, titre, categorie, difficulte):
         self.questions = questions
+        self.titre = titre
+        self.categorie = categorie
+        self.difficulte = difficulte
+
+    def from_json_data(data):  # c'est ici qu l'on va réunir les infos du questionnaire
+        liste_des_questions = data["questions"]  # toutes les questions du dictionnaire
+        questions = [Question.from_json_data(i) for i in liste_des_questions]
+        #  "questions" = ["question créée n°i" for i in "liste des questions"]
+        # i correspond à un élément dans "liste de question"
+        return Questionnaire(questions, data["titre"], data["categorie"], data["difficulte"])
+        # on peut lui ajouter un tuple ou une liste indiférement
 
     def lancer(self):
-        print("CATEGORIE : " + categorie)
-        print()
-        print("TITRE : " + titre)
-        print()
-        #  print(len(self.questions))
+        print("----------> ")
+        print("QUESTIONNAIRE : " + self.titre)
+        print("Catégorie : " + self.categorie)
+        print("Difficulté : " + self.difficulte)
+        print("Nombre de question : " + str(len(self.questions)))
+        print("----------> ")
         score = 0
         for question in self.questions:
             self.numero_question += 1
-            print("QUESTION N°" + str(self.numero_question) + " / " + str(
-                len(self.questions)))  # on met ce "print" ici pour avoir le numéro de la question
+            print("QUESTION N°" + str(self.numero_question) + " / " + str(len(self.questions)))  # on met ce
+            # "print" ici pour avoir le numéro de la question
             if question.poser():
                 score += 1
         print("Score final :", score, "sur", len(self.questions))
         return score
 
 
-"""questionnaire = (
-    ("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"), 
-    ("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
-    ("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-                )
-
-lancer_questionnaire(questionnaire)"""
-
-# q1 = Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris")
-# q1.poser()
-
-# data = (("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris", "Quelle est la capitale de la France ?")
-# q = Question.FromData(data)
-# print(q.__dict__)
-
-# Questionnaire(
-#   (
-#  Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
-# Question("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome")
-# Question("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-# )
-# ).lancer()
-
-
-# ce que l'on  obtient à la suite du "import" sur le chat par ex
-#  [
-#  {   'titre': "À quelle classe d'animaux vertébrés regroupant près de 5.400 espèces appartient le chat ?",
-# 'choix': [('Oiseaux', False), ('Poissons', False), ('Mammifères', True), ('Reptiles', False)]   },
-#  {'titre': 'Lorsque vous apercevez votrchat faire le gros dos, il est probablement...',
-#  'choix': [('Malade', False), ('En chasse', False), ('Effrayé', True), ('Content', False)]}
-
-# Ceci est sous forme d'un dico
-
-# On va charger un fichier json, désérilaiser les données et faire tourner le qestionnaire à partir des données qui
-# sont dans un fichier. C'est à dire que l'on va récupérer des données texte et on va les mettre sous forme d'un dico
-
-
-# Questionnaire(
-#   (
-#  Question(questions[1]['titre'], (questions[1]['choix'][0][0], questions[1]['choix'][1][0], questions[1]['choix'][2][0], questions[1]['choix'][3][0]), questions[1]['choix'][2][0]),
-# Question(questions[2]['titre'], (questions[2]['choix'][0][0], questions[2]['choix'][1][0], questions[2]['choix'][2][0], questions[2]['choix'][3][0]), questions[2]['choix'][2][0]),
-# Question("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome")
-# )).lancer()
-# lancer le questionnaire n'a pour but que de lancer toutes les questions les unes à la suite des autres
-
-
 # NOUVEAU TRAVAIL / les fichiers "json" que l'on récupère sont au format texte
-f = open("cinema_starwars_confirme.json", "r")  # on ouvre le fichier json avec toutes les questions et réponse
+f = open("gastronomie_chocolat_expert.json", "r")  # on ouvre le fichier json avec toutes les questions et réponse
 f_reading = f.read()  # on créé un fichier de lecture
 f_reading_dico = json.loads(f_reading)  # on désérialise : "texte -> dico". C'est un dictionnaire dans lequel on a
 # toutes les questions (on aura pu le faire après le "close" si on le souhaitais)
-#   print(f_reading_dico)
-f.close()  # on a tout copier dans le dico "f_reading_dico" on peut fermer le fichier texte
-
+f.close()  # on a tout copié dans le dico "f_reading_dico" on peut fermer le fichier texte
 
 # on récupère les données du dico
-questions = f_reading_dico["questions"]  # toutes les questions du dictionnaire
-#categorie = f_reading_dico["categorie"]  # la catégorie du quizz
-#titre = f_reading_dico["titre"]  # la titre du quizz
-q = Question.FromJsonData(questions[0])  # on appelle la fonction "FromJsonData" de la classe "Question" (rq : on aurait
-# pu choisir de changer l'init de "Question", mais on a préféré changer le pattern entier)
-q.poser()
+#  liste_des_questions = f_reading_dico["questions"]  # toutes les questions du dictionnaire
+# ON POSE UNE QUESTION SEULE ICI
+# q = Question.FromJsonData(liste_des_questions[0])  # on appelle la fonction "FromJsonData" de la classe "Question"
+# (rq : on aurait pu choisir de changer l'init de "Question", mais on a préféré changer le pattern entier)
+# print(type(q))
+# print(q)
+# q.poser()  # on pose cette question
 
-#   print(questions)
+# DONNEES de compréhension
+#   categorie_questionnaire = f_reading_dico["categorie"]  # la catégorie du quizz
+#   titre_questionnaire = f_reading_dico["titre"]  # la titre du quizz
+#   difficulte_questionnaire = f_reading_dico["difficulte"]  # la difficulté du quizz
 #   print(categorie)
 #   print(titre)
-
 #   print(questions[1]['titre'])  # question 2
 #   print(questions[3]['choix'])  # tous les choix choix de la question 4
 #   print(questions[5]['choix'][0][0])  # Choix 1 de la question 6
 #   print(questions[5]['choix'][2][0])  # Choix 3 de la question 6
 
+# METHODE AVEC BOUBLE FOR que l'on a fait eovuler avec une comletion juste en dessous
+"""Question_list = []
+print(liste_des_questions)
+print(len(liste_des_questions))
+for i in range(0, len(liste_des_questions)): 
+    q = Question.FromJsonData(liste_des_questions[i])
+    Question_list.append(q)
+    print(Question_list)
+    
+Questionnaire(Question_list).lancer()  # on peut lui ajouter un tuple ou une liste indiférement"""
+
+# ENCORE une fois cette boucle for peut être faite par un COMPLETION de liste
+Questionnaire.from_json_data(f_reading_dico).lancer()
+# avec cette simple commande on peut lancer un questionnaire sur différents questionnaires
+
+# METHODE INITIALE : on avait codé à l'extérieur de la calsse question
 """Question_list = []
 #   print(questions)
 #   print(len(questions))
@@ -237,6 +220,15 @@ Questionnaire(  # on peut lui ajouter un tuple ou une liste indiférement. On lu
 # ETAPE 1 : essayer de faire venir le fichier du code "import.py". En effet, il faut que je réussisse à faire le lien
 # avec le fichier "import.py"
 # En fait on va devoir charger les fichiers ".json" que l'on créer grâce à notre script d'import. Et c'est ces fichiers
-# que l'on va utiliser dans le "questionnaire.py" afin de poser les questions
+# que l'on va utiliser dans le "questionnaire.py" afin de poser les questions. Ces fichiers se chargent comme un fichier
+# texte
+# On a chargé un fichier "json", désériliaser les données et fait tourner la question à partir des données qui sont dans
+# le fichier. C'est à dire que l'on va récupérer des données texte et on va les mettre sous forme d'un dico
+
+
+# ETAPE 2 : a pu poser une questionen retravaillant un peu le classe "qestion", on va désromais lancer toute les
+# questions à partir de la classe questionnaire
+
 
 # PROBLEME RENCONTRE :
+
