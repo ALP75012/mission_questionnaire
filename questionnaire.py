@@ -1,4 +1,6 @@
 import json
+import sys
+
 
 # PROJET QUESTIONNAIRE V3 : POO
 #
@@ -51,14 +53,14 @@ class Question:
 
         # PARTIE QUI PEUT ETRE REMPLACE PAR UNE COMPLETION
         # bonne_rep = None
-        #for i in range(0, 4):
-          #  print(i)
-           # print(data["choix"][i][1])
-            #print(data["choix"][i][0])
+        # for i in range(0, 4):
+        #  print(i)
+        # print(data["choix"][i][1])
+        # print(data["choix"][i][0])
         #    if data["choix"][i][1]:
-             #   print("VRAI")
-         #       bonne_rep = data["choix"][i][0]
-              #  print(bonne_rep)
+        #   print("VRAI")
+        #       bonne_rep = data["choix"][i][0]
+        #  print(bonne_rep)
         # print(bonne_rep)
 
         bonne_reponse = [i[0] for i in data["choix"] if i[1]]
@@ -69,7 +71,6 @@ class Question:
         # CONSTRUCTION DE LA QUESTION : avec "ques", "choix", "bonne_reponse"
         q = Question(ques, choix, bonne_reponse[0])  # on utilise la syntaxe d'avant que l'on retravaillé
         return q
-
 
     def poser(self):  # cette fonction est appelé à chaque nouvelle question
         # print("QUESTION")
@@ -104,7 +105,7 @@ class Question:
 
 class Questionnaire:
     numero_question = 0
-    
+
     def __init__(self, questions, titre, categorie, difficulte):
         self.questions = questions
         self.titre = titre
@@ -118,6 +119,20 @@ class Questionnaire:
         # i correspond à un élément dans "liste de question"
         return Questionnaire(questions, data["titre"], data["categorie"], data["difficulte"])
         # on peut lui ajouter un tuple ou une liste indiférement
+
+    def from_json_file(filename):
+        try:
+            f = open(filename, "r")  # on ouvre le fichier json (format texte)
+        except:
+            print("ERREUR : le fichier n'a pas pu être chargé (mauvais format ou mauvais nom de fichier)")
+            return None
+        else:
+            f_reading = f.read()  # on créé un fichier de lecture
+            f.close()  # on a tout copié dans le dico "f_reading_dico" on peut fermer le fichier texte
+            f_reading_dico = json.loads(f_reading)  # on désérialise : "texte -> dico". C'est un dictionnaire dans lequel
+            # on a toutes les questions
+            # avec cette simple commande on contruit un questionnaire à partir des datas que l'on pourra lancer par la suite
+            return Questionnaire.from_json_data(f_reading_dico)
 
     def lancer(self):
         print("----------> ")
@@ -137,13 +152,25 @@ class Questionnaire:
         return score
 
 
-# NOUVEAU TRAVAIL / les fichiers "json" que l'on récupère sont au format texte
-f = open("gastronomie_chocolat_expert.json", "r")  # on ouvre le fichier json avec toutes les questions et réponse
-f_reading = f.read()  # on créé un fichier de lecture
-f_reading_dico = json.loads(f_reading)  # on désérialise : "texte -> dico". C'est un dictionnaire dans lequel on a
-# toutes les questions (on aura pu le faire après le "close" si on le souhaitais)
-f.close()  # on a tout copié dans le dico "f_reading_dico" on peut fermer le fichier texte
+# Questionnaire.from_json_file("gastronomie_chocolat_confirme.json").lancer()
 
+# Avec ceci, on obtient une collection avec un élement qui est le nom du script
+# print(sys.argv)
+
+
+if len(sys.argv) < 2:  # cela stipule que l'on a qu'un seul élément dans "sys_argv"
+    print("ERREUR, vous devez rentrer le nom du fichier à charger. Comme ceci : 'questionnaire.py fichier'")
+    exit(0)  # pour sortir totalement du programme
+
+file = sys.argv[1]
+questionnaire = Questionnaire.from_json_file(file)
+if questionnaire:
+    questionnaire.lancer()
+
+
+
+
+# DONNEES DE COMPREHENSION
 # on récupère les données du dico
 #  liste_des_questions = f_reading_dico["questions"]  # toutes les questions du dictionnaire
 # ON POSE UNE QUESTION SEULE ICI
@@ -163,21 +190,6 @@ f.close()  # on a tout copié dans le dico "f_reading_dico" on peut fermer le fi
 #   print(questions[3]['choix'])  # tous les choix choix de la question 4
 #   print(questions[5]['choix'][0][0])  # Choix 1 de la question 6
 #   print(questions[5]['choix'][2][0])  # Choix 3 de la question 6
-
-# METHODE AVEC BOUBLE FOR que l'on a fait eovuler avec une comletion juste en dessous
-"""Question_list = []
-print(liste_des_questions)
-print(len(liste_des_questions))
-for i in range(0, len(liste_des_questions)): 
-    q = Question.FromJsonData(liste_des_questions[i])
-    Question_list.append(q)
-    print(Question_list)
-    
-Questionnaire(Question_list).lancer()  # on peut lui ajouter un tuple ou une liste indiférement"""
-
-# ENCORE une fois cette boucle for peut être faite par un COMPLETION de liste
-Questionnaire.from_json_data(f_reading_dico).lancer()
-# avec cette simple commande on peut lancer un questionnaire sur différents questionnaires
 
 # METHODE INITIALE : on avait codé à l'extérieur de la calsse question
 """Question_list = []
@@ -216,7 +228,6 @@ Questionnaire(  # on peut lui ajouter un tuple ou une liste indiférement. On lu
     Question_list
 ).lancer()"""
 
-
 # ETAPE 1 : essayer de faire venir le fichier du code "import.py". En effet, il faut que je réussisse à faire le lien
 # avec le fichier "import.py"
 # En fait on va devoir charger les fichiers ".json" que l'on créer grâce à notre script d'import. Et c'est ces fichiers
@@ -231,4 +242,3 @@ Questionnaire(  # on peut lui ajouter un tuple ou une liste indiférement. On lu
 
 
 # PROBLEME RENCONTRE :
-
