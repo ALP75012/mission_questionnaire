@@ -1,7 +1,7 @@
 import json
 import sys
 
-
+# CE vers quoi on va tendre :
 # PROJET QUESTIONNAIRE V3 : POO
 #
 # - Pratiquer sur la POO
@@ -24,23 +24,19 @@ import sys
 #
 
 
-# dans ce questionnaire l'iéde est que : au lien d'utiliser des données en dur comme c'est le cas acutellement,
-# on va charger un fichier "json" récupéré dans le fichier "import" le désérialiser et l'utiliser. Au débu on lui passera le fichier en dur,
-# puis on rajoutera la possiblité de lui passer le fichier en ligne de commande
-
-
 class Question:
     def __init__(self, titre, choix, bonne_reponse):
         self.titre = titre
         self.choix = choix
         self.bonne_reponse = bonne_reponse
 
-    def from_json_data(data):  # ici on obligé de faire du code pour aller chercher les réponse
+    def from_json_data(data):
         # QUESTIONS
         ques = data["titre"]
         #  print(ques)
 
         # CHOIX
+        # transforme les données tuple (titre, bool "bonne reponse") -> [choix1, choix2, ...]
         choix = [i[0] for i in data["choix"]]  # on fait une complétion de liste
         # print(choix)
         # print(len(choix))
@@ -63,14 +59,17 @@ class Question:
         #  print(bonne_rep)
         # print(bonne_rep)
 
+        # Trouve le bon choix en fonction du bool "bonne réponse"
         bonne_reponse = [i[0] for i in data["choix"] if i[1]]
         #   print(bonne_reponse[0])
+        # Si aucun bonne réponse ou plusieurs bonne réponse -> anomalie -> on stop le code
         if len(bonne_reponse) != 1:
             return None  # si la longueur de la bonne réponse est différent de 1 c'est qu'on a un pb
 
         # CONSTRUCTION DE LA QUESTION : avec "ques", "choix", "bonne_reponse"
         q = Question(ques, choix, bonne_reponse[0])  # on utilise la syntaxe d'avant que l'on retravaillé
-        return q
+        return q  # cette question n'a été construite avec la bonne réponse que si celle-ci avait une seule bonne
+    # réponse, sinon cette fonction "Question.from_json_data" retourne "None"
 
     def poser(self):  # cette fonction est appelé à chaque nouvelle question
         # print("QUESTION")
@@ -114,7 +113,15 @@ class Questionnaire:
 
     def from_json_data(data):  # c'est ici qu l'on va réunir les infos du questionnaire
         liste_des_questions = data["questions"]  # toutes les questions du dictionnaire
+
+        # 'questions = [Question.from_json_data(i) for i in liste_des_questions if Question.from_json_data(i)]'
+        # ici on ajoute la question au questionnaire, que si celle-ci et valide (une seule bonne réponse)
+        # on aurait pu utiliser ce que l'on vient de présenter juste au dessus, mais utiliser ceci permet d'allouer un
+        # peu moins de mémoire car on ne recrée pas un objet à chaque fois
         questions = [Question.from_json_data(i) for i in liste_des_questions]
+        questions = [i for i in questions if i]  # on reboucle encore, on vient alors supprimer les "None" de la liste
+        # des questions -> supprimer les question none qui n'ont pas pu être crée
+
         #  "questions" = ["question créée n°i" for i in "liste des questions"]
         # i correspond à un élément dans "liste de question"
         return Questionnaire(questions, data["titre"], data["categorie"], data["difficulte"])
@@ -166,8 +173,6 @@ file = sys.argv[1]
 questionnaire = Questionnaire.from_json_file(file)
 if questionnaire:
     questionnaire.lancer()
-
-
 
 
 # DONNEES DE COMPREHENSION
@@ -236,9 +241,13 @@ Questionnaire(  # on peut lui ajouter un tuple ou une liste indiférement. On lu
 # On a chargé un fichier "json", désériliaser les données et fait tourner la question à partir des données qui sont dans
 # le fichier. C'est à dire que l'on va récupérer des données texte et on va les mettre sous forme d'un dico
 
-
 # ETAPE 2 : a pu poser une questionen retravaillant un peu le classe "qestion", on va désromais lancer toute les
 # questions à partir de la classe questionnaire
 
-
 # PROBLEME RENCONTRE :
+
+# REMARQUE : ici on a réalisé notre code en français, mais génralement dans une société, on écrira toujours le code en
+# anglais
+# On aurait pu réaliser une version "livrable" dans laquelle on enlève tous les commentaires, mais nous avons gardé
+# cette version afin d'expliquer les différentes lignes de notre code. Dans la vidéo N°596 on explique les commentaires
+# classiques que l'on pourrait mettre pour commenter ce genre de code

@@ -94,7 +94,6 @@ def generate_json_file(categorie, titre, url):  # cette fonction permet de prend
                 file.write(out_json)
                 file.close()
 
-
                 # là j'ai décidé d'écrire mes données sur un fichier texte pour voir ce que cela donne réellement
 
                 # file = open("mon_fichier_txt_avec_question", "w")
@@ -131,4 +130,7 @@ for quizz_data in open_quizz_db_data:
 # REMARQUES :
 # écrire ces catégories : étapes, problème rencontré, remarque est utile dans les projets que je récupére pour avancer
 # pas à pas
+# On aurait pu réaliser une version "livrable" dans laquelle on enlève tous les commentaires, mais nous avons gardé
+# cette version afin d'expliquer les différentes lignes de notre code. Dans la vidéo N°596 on explique les commentaires
+# classiques que l'on pourrait mettre pour commenter ce genre de code
 
