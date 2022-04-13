@@ -112,6 +112,8 @@ class Questionnaire:
         self.difficulte = difficulte
 
     def from_json_data(data):  # c'est ici qu l'on va réunir les infos du questionnaire
+        if not data.get("questions"):  # si on a pas de question on ne peut pas traiter de questionnaire.
+            return None
         liste_des_questions = data["questions"]  # toutes les questions du dictionnaire
 
         # 'questions = [Question.from_json_data(i) for i in liste_des_questions if Question.from_json_data(i)]'
@@ -121,6 +123,19 @@ class Questionnaire:
         questions = [Question.from_json_data(i) for i in liste_des_questions]
         questions = [i for i in questions if i]  # on reboucle encore, on vient alors supprimer les "None" de la liste
         # des questions -> supprimer les question none qui n'ont pas pu être crée
+
+        # ici on va faire le choix de rendre optionnel les paramètre de difficultés et de catégorie (c'est à dire que
+        # l'on pourra importer un questionnaire qui ne possedera pas ces catégories) par contre  le "titre" sera lui
+        # indispensable pour que le questionnaire soit généré : tout ceci est un choix de modélisation.
+
+        if not data.get("categorie"):
+            data["categorie"] = "inconnue"
+
+        if not data.get("difficulte"):
+            data["difficulte"] = "inconnue"
+
+        if not data.get("titre"):
+            return None
 
         #  "questions" = ["question créée n°i" for i in "liste des questions"]
         # i correspond à un élément dans "liste de question"
@@ -165,14 +180,15 @@ class Questionnaire:
 # print(sys.argv)
 
 
-if len(sys.argv) < 2:  # cela stipule que l'on a qu'un seul élément dans "sys_argv"
-    print("ERREUR, vous devez rentrer le nom du fichier à charger. Comme ceci : 'questionnaire.py fichier'")
-    exit(0)  # pour sortir totalement du programme
+if __name__ == "__main__":  # condition que l'on utilise pour pouvoir faire tourner "test.py" sans appeler ceci
+    if len(sys.argv) < 2:  # cela stipule que l'on a qu'un seul élément dans "sys_argv"
+        print("ERREUR, vous devez rentrer le nom du fichier à charger. Comme ceci : 'questionnaire.py fichier'")
+        exit(0)  # pour sortir totalement du programme
 
-file = sys.argv[1]
-questionnaire = Questionnaire.from_json_file(file)
-if questionnaire:
-    questionnaire.lancer()
+    file = sys.argv[1]
+    questionnaire = Questionnaire.from_json_file(file)
+    if questionnaire:
+        questionnaire.lancer()
 
 
 # DONNEES DE COMPREHENSION

@@ -112,8 +112,9 @@ def generate_json_file(categorie, titre, url):  # cette fonction permet de prend
             print()
 
 
-for quizz_data in open_quizz_db_data:
-    generate_json_file(quizz_data[0], quizz_data[1], quizz_data[2])
+if __name__ == "__main__":  # on utilise la même condition que pour le questionnaire
+    for quizz_data in open_quizz_db_data:
+        generate_json_file(quizz_data[0], quizz_data[1], quizz_data[2])  # ("categorie", "titre", "url")
 
 
 # ETAPE 1 : debugguer le code. L'idée est que le code que tourne
